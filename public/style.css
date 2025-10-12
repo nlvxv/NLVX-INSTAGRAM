@@ -1,42 +1,21 @@
-/* File: /public/style.css */
+/* File: /public/style.css (Final Version with bigger forgot password) */
 
-/* 1. Define Color Variables for Light Mode (Default) */
 :root {
-  --background-color: #fafafa;
-  --primary-text-color: #262626;
-  --secondary-text-color: #8e8e8e;
-  --container-background: #ffffff;
-  --container-border-color: #dbdbdb;
-  --input-background: #fafafa;
-  --input-border-color: #dbdbdb;
-  --button-background: #0095f6;
+  --background-color: #000000;
+  --primary-text-color: #e0e0e0;
+  --secondary-text-color: #a8a8a8;
+  --container-border-color: #262626;
+  --input-background: #121212;
+  --input-border-color: #363636;
+  --input-text-color: #f5f5f5;
+  --button-background: #4a65f6;
   --button-text-color: #ffffff;
-  --button-disabled-background: #4cb5f9;
-  --link-color: #00376b;
-  --facebook-link-color: #385185;
-  --logo-filter: none; /* No filter for light mode */
+  --link-color: #e0e0e0;
+  --facebook-link-color: #0095f6;
+  --special-link-color: #a0b9ff; /* The blue color from the image */
+  --logo-filter: invert(1) grayscale(1) brightness(1.5);
 }
 
-/* 2. Define Color Variables for Dark Mode */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: #000000;
-    --primary-text-color: #f5f5f5;
-    --secondary-text-color: #a8a8a8;
-    --container-background: #000000;
-    --container-border-color: #363636;
-    --input-background: #121212;
-    --input-border-color: #363636;
-    --button-background: #0095f6;
-    --button-text-color: #ffffff;
-    --button-disabled-background: #00376b;
-    --link-color: #0095f6;
-    --facebook-link-color: #0095f6;
-    --logo-filter: invert(1) grayscale(1) brightness(1.5); /* Invert logo colors for dark background */
-  }
-}
-
-/* 3. Apply the variables to the elements */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--background-color);
@@ -47,64 +26,55 @@ body {
   justify-content: center;
   min-height: 100vh;
   margin: 0;
-  transition: background-color 0.3s, color 0.3s;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.login-container {
-  max-width: 350px;
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  text-align: center;
+  max-width: 350px;
+  flex-grow: 1;
+  justify-content: center;
 }
 
 .login-box, .signup-box {
-  background-color: var(--container-background);
+  background-color: var(--background-color);
   border: 1px solid var(--container-border-color);
   border-radius: 3px;
   padding: 20px 40px;
   margin: 10px 0;
-  transition: background-color 0.3s, border-color 0.3s;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .instagram-logo {
   width: 175px;
-  margin: 22px auto 12px;
+  margin: 22px auto 36px;
   filter: var(--logo-filter);
-  transition: filter 0.3s;
 }
 
 .input-group {
-  position: relative;
   margin-bottom: 6px;
 }
 
 input[type="text"], input[type="password"] {
   width: 100%;
-  padding: 9px 8px;
+  padding: 12px 8px;
   background: var(--input-background);
   border: 1px solid var(--input-border-color);
-  border-radius: 3px;
+  border-radius: 6px;
   box-sizing: border-box;
   font-size: 12px;
-  color: var(--primary-text-color);
-  transition: background-color 0.3s, border-color 0.3s;
+  color: var(--input-text-color);
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input:focus {
   outline: none;
-  border-color: var(--secondary-text-color);
-}
-
-.password-toggle {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--primary-text-color);
-  cursor: pointer;
+  border-color: #5a5a5a;
 }
 
 .login-button {
@@ -112,38 +82,16 @@ input[type="text"]:focus, input[type="password"]:focus {
   background-color: var(--button-background);
   border: none;
   color: var(--button-text-color);
-  padding: 8px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   margin-top: 14px;
-  transition: background-color 0.3s;
 }
 
-.login-button:disabled {
-  background-color: var(--button-disabled-background);
-  opacity: 0.7;
-}
-
-.or-separator {
-  display: flex;
-  align-items: center;
-  margin: 10px 0 18px;
-}
-
-.line {
-  flex-grow: 1;
-  height: 1px;
-  background-color: var(--container-border-color);
-  transition: background-color 0.3s;
-}
-
-.or-text {
-  margin: 0 18px;
-  color: var(--secondary-text-color);
-  font-weight: 600;
-  font-size: 13px;
-}
+.or-separator { display: flex; align-items: center; margin: 18px 0; }
+.line { flex-grow: 1; height: 1px; background-color: var(--container-border-color); }
+.or-text { margin: 0 18px; color: var(--secondary-text-color); font-weight: 600; font-size: 13px; }
 
 .facebook-login {
   color: var(--facebook-link-color);
@@ -152,39 +100,80 @@ input[type="text"]:focus, input[type="password"]:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
   font-size: 14px;
 }
-
-.facebook-login svg {
-  margin-right: 8px;
-}
-/* Make Facebook icon visible in dark mode */
-@media (prefers-color-scheme: dark) {
-  .facebook-login svg path {
-    fill: var(--facebook-link-color);
-  }
-}
+.facebook-login svg { margin-right: 8px; }
+.facebook-login svg path { fill: var(--facebook-link-color); }
 
 .forgot-password {
   color: var(--link-color);
+  font-size: 14px; /* <-- THE CHANGE IS HERE */
+  text-decoration: none;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.report-text {
   font-size: 12px;
+  color: var(--secondary-text-color);
+  line-height: 1.4;
+}
+.report-text a {
+  color: var(--special-link-color);
   text-decoration: none;
 }
 
 .signup-box p {
   font-size: 14px;
+  color: var(--primary-text-color);
 }
 
 .signup-link {
-  color: var(--button-background);
+  color: var(--special-link-color);
   font-weight: 600;
   text-decoration: none;
 }
 
 footer {
-  margin-top: 50px;
+  width: 100%;
+  max-width: 935px;
+  padding: 20px 0;
   text-align: center;
+  flex-shrink: 0;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.footer-links a {
+  color: var(--secondary-text-color);
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.language-selector select {
+  background-color: transparent;
+  border: none;
+  color: var(--secondary-text-color);
+  font-size: 12px;
+  padding: 0;
+}
+
+.language-selector select:focus {
+  outline: none;
 }
 
 .copyright {
@@ -192,19 +181,5 @@ footer {
   font-size: 12px;
 }
 
-.button-spinner {
-  display: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+.button-spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+@keyframes spin { to { transform: rotate(360deg); } }

